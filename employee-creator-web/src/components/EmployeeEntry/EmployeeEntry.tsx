@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
 import styles from "./EmployeeEntry.module.scss";
-import { type Employee, updateEmployee } from "../../utils/employee";
+import { deleteEmployee, type Employee } from "../../utils/employee";
 import EditEmployeeDialog from "../EditEmployeeDialog/EditEmployeeDialog";
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
 
-function EmployeeEntry(props: { employee: Employee; onDeleted?: () => void }) {
-  const { employee, onDeleted } = props;
+function EmployeeEntry(props: { employee: Employee; onEmployeesChanged: () => void }) {
+  const { employee, onEmployeesChanged } = props;
   const editDialogRef = useRef<HTMLDialogElement | null>(null);
   const deleteConfirmRef = useRef<HTMLDialogElement | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -15,8 +15,7 @@ function EmployeeEntry(props: { employee: Employee; onDeleted?: () => void }) {
   };
 
   const handleEmployeeSaved = (updatedEmployee: Employee) => {
-    // Handle the updated employee if needed (e.g., refresh the list)
-    console.log("Employee updated:", updatedEmployee);
+    onEmployeesChanged();
   };
 
   const handleDelete = () => {
@@ -26,9 +25,8 @@ function EmployeeEntry(props: { employee: Employee; onDeleted?: () => void }) {
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     try {
-      // Soft delete by updating the deleted flag
-      await updateEmployee(employee.id, { deleted: true });
-      onDeleted?.();
+      await deleteEmployee(employee.id);
+      onEmployeesChanged();
     } catch (error) {
       console.error("Failed to delete employee:", error);
     } finally {

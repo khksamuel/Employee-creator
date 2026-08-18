@@ -2,7 +2,11 @@ import { useRef } from "react";
 import styles from "./AddEmployee.module.scss";
 import AddEmployeeDialog from "../AddEmployeeDialog/AddEmployeeDialog";
 
-function AddEmployee() {
+interface AddEmployeeProps {
+  onEmployeeSaved: () => void;
+}
+
+function AddEmployee({ onEmployeeSaved }: AddEmployeeProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   return (
     <div className={styles.addEmployee}>
@@ -15,7 +19,7 @@ function AddEmployee() {
       >
         Add Employee
       </button>
-      <AddEmployeeDialog dialogRef={dialogRef} />
+      <AddEmployeeDialog dialogRef={dialogRef} onEmployeeSaved={onEmployeeSaved} />
     </div>
   );
 }

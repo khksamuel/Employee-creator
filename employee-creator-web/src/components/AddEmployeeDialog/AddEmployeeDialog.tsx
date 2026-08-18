@@ -4,14 +4,20 @@ import styles from "./AddEmployeeDialog.module.scss";
 
 interface AddEmployeeDialogProps {
   dialogRef: RefObject<HTMLDialogElement | null>;
+  onEmployeeSaved: () => void;
 }
 
-function AddEmployeeDialog({ dialogRef }: AddEmployeeDialogProps) {
+function AddEmployeeDialog({ dialogRef, onEmployeeSaved }: AddEmployeeDialogProps) {
+  const handleSaved = () => {
+    dialogRef.current?.close();
+    onEmployeeSaved();
+  };
+
   return (
     <dialog className={styles.dialog} ref={dialogRef}>
       <div className={styles.content}>
         <EmployeeForm
-          onSaved={() => dialogRef.current?.close()}
+          onSaved={handleSaved}
           headerAction={
             <button
               className={styles.closeButton}
