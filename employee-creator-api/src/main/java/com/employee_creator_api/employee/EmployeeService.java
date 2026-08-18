@@ -74,9 +74,13 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
-        Employee employee = findActiveEmployee(id);
-        employee.softDelete();
-        employeeRepository.save(employee);
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: " + id));
+
+        if (!Boolean.TRUE.equals(employee.getDeleted())) {
+            employee.softDelete();
+            employeeRepository.save(employee);
+        }
     }
 
     private Employee findActiveEmployee(Long id) {
