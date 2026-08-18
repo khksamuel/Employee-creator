@@ -69,6 +69,9 @@ public class EmployeeService {
         if (updatedEmployee.getHourPerWeek() != null) {
             employee.setHourPerWeek(updatedEmployee.getHourPerWeek());
         }
+        if (updatedEmployee.getDeleted() != null) {
+            employee.setDeleted(updatedEmployee.getDeleted());
+        }
 
         return employeeRepository.save(employee);
     }
