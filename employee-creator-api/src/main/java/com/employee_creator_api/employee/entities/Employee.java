@@ -2,8 +2,7 @@ package com.employee_creator_api.employee.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.Convert;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,7 +36,7 @@ public class Employee {
     private String employeeAddress;
 
     @Column(name = "contract_type", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ContractTypeConverter.class)
     private ContractType contractType;
 
     @Column(name = "start_date", nullable = false)
@@ -47,7 +46,7 @@ public class Employee {
     private LocalDate endDate;
 
     @Column(name = "employment_type", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = EmploymentTypeConverter.class)
     private EmploymentType employmentType;
 
     @Column(name = "hour_per_week", nullable = false)
