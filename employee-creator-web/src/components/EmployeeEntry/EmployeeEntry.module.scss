@@ -1,0 +1,27 @@
+.employeeEntry {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  border: 1px solid black;
+  border-radius: 1rem;
+}
+
+.employeeActions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.employeeActionsButton {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
+}
