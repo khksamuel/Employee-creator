@@ -13,4 +13,5 @@ CREATE TABLE IF NOT EXISTS employee_creator.employee (
     end_date DATE, -- null if ongoing
     employment_type ENUM('full-time', 'part-time') NOT NULL,
     hour_per_week INT UNSIGNED NOT NULL
+    deleted TINYINT(1) NULL DEFAULT 0; -- for soft deletion
 );

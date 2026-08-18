@@ -1,4 +1,5 @@
 -- Seeder for employee_creator.employee table
+-- 6 entries in total, 2 were soft deleted with the deleted flag
 
 INSERT INTO
     employee_creator.employee (
@@ -12,7 +13,8 @@ INSERT INTO
         start_date,
         end_date,
         employment_type,
-        hour_per_week
+        hour_per_week,
+        deleted
     )
 VALUES (
         'John',
@@ -25,7 +27,8 @@ VALUES (
         '2022-01-15',
         NULL,
         'full-time',
-        40
+        40,
+        0
     ),
     (
         'Sarah',
@@ -38,7 +41,8 @@ VALUES (
         '2021-06-20',
         NULL,
         'full-time',
-        40
+        40,
+        0
     ),
     (
         'Emily',
@@ -51,7 +55,8 @@ VALUES (
         '2023-09-01',
         '2024-12-31',
         'part-time',
-        25
+        25,
+        1
     ),
     (
         'David',
@@ -64,7 +69,8 @@ VALUES (
         '2020-03-10',
         NULL,
         'full-time',
-        40
+        40,
+        1
     ),
     (
         'Jessica',
@@ -77,7 +83,8 @@ VALUES (
         '2023-11-15',
         NULL,
         'part-time',
-        20
+        20,
+        0
     ),
     (
         'Michael',
@@ -90,5 +97,6 @@ VALUES (
         '2022-07-05',
         NULL,
         'full-time',
-        40
+        40,
+        0
     );
