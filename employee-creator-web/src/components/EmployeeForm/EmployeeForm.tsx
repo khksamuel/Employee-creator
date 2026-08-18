@@ -106,6 +106,7 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
     };
 
     try {
+      // Call the appropriate API function based on whether we're editing or creating
       const savedEmployee = employee
         ? await updateEmployee(employee.id, employeeInput)
         : await createEmployee(employeeInput);
