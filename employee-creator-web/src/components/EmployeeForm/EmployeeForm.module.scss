@@ -1,0 +1,152 @@
+.employeeForm {
+  background-color: rgb(230, 230, 230);
+  padding: 2rem;
+  text-align: left;
+}
+
+.headingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.title {
+  margin: 0;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 0.9rem 1.5rem;
+  max-width: 48rem;
+}
+
+.form label {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.form input,
+.form select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+}
+
+.form input:focus,
+.form select:focus {
+  border-color: #007bff;
+  outline: 2px solid rgba(0, 123, 255, 0.2);
+  outline-offset: 1px;
+}
+
+.phoneField {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.phoneField label {
+  display: flex;
+  flex-direction: column;
+}
+
+.phoneField small {
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+.phoneInput {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+}
+
+.phoneInput:focus-within {
+  border-color: #007bff;
+  outline: 2px solid rgba(0, 123, 255, 0.2);
+  outline-offset: 1px;
+}
+
+.phoneInput span {
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.7rem;
+  border-right: 1px solid var(--border);
+  background-color: #dfe3e8;
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.form .phoneInput input {
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+}
+
+.submitButton {
+  grid-column: 2;
+  justify-self: start;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+
+  &:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+}
+
+.error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #b42318;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .employeeForm {
+    padding: 1.5rem;
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .form input,
+  .form select {
+    margin-bottom: 0.75rem;
+  }
+
+  .phoneField {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .submitButton {
+    grid-column: 1;
+  }
+}
