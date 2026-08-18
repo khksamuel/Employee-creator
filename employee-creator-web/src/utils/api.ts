@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
+const baseUrl = "/api";
 
 export class ApiError extends Error {
   public readonly status: number;
