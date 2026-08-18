@@ -1,4 +1,4 @@
-package com.example.employee_creator_api;
+package com.employee_creator_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
