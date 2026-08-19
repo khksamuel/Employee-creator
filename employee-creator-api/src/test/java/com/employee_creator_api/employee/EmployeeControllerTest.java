@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.employee_creator_api.employee.dto.CreateEmployeeRequest;
+import com.employee_creator_api.employee.dto.UpdateEmployeeRequest;
 import com.employee_creator_api.employee.entities.ContractType;
 import com.employee_creator_api.employee.entities.Employee;
 import com.employee_creator_api.employee.entities.EmploymentType;
@@ -70,7 +72,7 @@ class EmployeeControllerTest {
 
     @Test
     void createEmployeeReturnsCreatedEmployee() throws Exception {
-        when(employeeService.createEmployee(any(Employee.class))).thenReturn(employee(3L, "Lin"));
+        when(employeeService.createEmployee(any(CreateEmployeeRequest.class))).thenReturn(employee(3L, "Lin"));
 
         mockMvc.perform(post("/api/employees")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +86,7 @@ class EmployeeControllerTest {
     void updateEmployeeReturnsUpdatedEmployee() throws Exception {
         Employee updated = employee(1L, "Ada");
         updated.setLastname("Lovelace");
-        when(employeeService.updateEmployee(eq(1L), any(Employee.class))).thenReturn(updated);
+        when(employeeService.updateEmployee(eq(1L), any(UpdateEmployeeRequest.class))).thenReturn(updated);
 
         mockMvc.perform(patch("/api/employees/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -125,8 +127,16 @@ class EmployeeControllerTest {
     }
 
     @Test
+    void createEmployeeRejectsInvalidEmployeeData() throws Exception {
+        mockMvc.perform(post("/api/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(employeeJson("Lin").replace("\"hourPerWeek\": 38", "\"hourPerWeek\": 0")))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void updateEmployeeReturnsNotFoundWhenEmployeeDoesNotExist() throws Exception {
-        when(employeeService.updateEmployee(eq(99L), any(Employee.class)))
+        when(employeeService.updateEmployee(eq(99L), any(UpdateEmployeeRequest.class)))
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: 99"));
 
         mockMvc.perform(patch("/api/employees/99")

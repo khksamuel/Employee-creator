@@ -47,7 +47,7 @@ function emptyForm(): FormValues {
     startDate: "",
     endDate: "",
     employmentType: "FULL_TIME",
-    hourPerWeek: 0,
+    hourPerWeek: 38,
   };
 }
 
@@ -97,6 +97,13 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+
+    const validationError = validateForm(form);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setIsSubmitting(true);
 
     const employeeInput: EmployeeInput = {
@@ -185,6 +192,8 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
               name="phone"
               inputMode="tel"
               placeholder="0412345678"
+              pattern="0?4[0-9]{8}"
+              title="Enter an Australian mobile number, for example 0412345678"
               value={form.phone}
               onChange={handleChange}
               required
@@ -261,6 +270,7 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
           name="hourPerWeek"
           type="number"
           min="1"
+          max="168"
           value={form.hourPerWeek}
           onChange={handleChange}
           required
@@ -284,3 +294,19 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
 }
 
 export default EmployeeForm;
+
+function validateForm(form: FormValues): string | null {
+  if (!/^0?4\d{8}$/.test(form.phone)) {
+    return "Enter a valid Australian mobile number, for example 0412345678.";
+  }
+
+  if (form.hourPerWeek < 1 || form.hourPerWeek > 168) {
+    return "Hours per week must be between 1 and 168.";
+  }
+
+  if (form.endDate && form.endDate < form.startDate) {
+    return "End date must be on or after the start date.";
+  }
+
+  return null;
+}

@@ -1,6 +1,8 @@
 package com.employee_creator_api.employee;
 
 import com.employee_creator_api.employee.entities.Employee;
+import com.employee_creator_api.employee.dto.CreateEmployeeRequest;
+import com.employee_creator_api.employee.dto.UpdateEmployeeRequest;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,52 +29,61 @@ public class EmployeeService {
         return findActiveEmployee(id);
     }
 
-    public Employee createEmployee(Employee employee) {
-        employee.setId(null);
+    public Employee createEmployee(CreateEmployeeRequest request) {
+        Employee employee = new Employee();
+        employee.setFirstname(request.firstname());
+        employee.setMiddlename(request.middlename());
+        employee.setLastname(request.lastname());
+        employee.setEmail(request.email());
+        employee.setPhone(request.phone());
+        employee.setEmployeeAddress(request.employeeAddress());
+        employee.setContractType(request.contractType());
+        employee.setStartDate(request.startDate());
+        employee.setEndDate(request.endDate());
+        employee.setEmploymentType(request.employmentType());
+        employee.setHourPerWeek(request.hourPerWeek());
         employee.setDeleted(false);
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(Long id, Employee updatedEmployee) {
+    public Employee updateEmployee(Long id, UpdateEmployeeRequest updatedEmployee) {
         Employee employee = findActiveEmployee(id);
 
-        if (updatedEmployee.getFirstname() != null) {
-            employee.setFirstname(updatedEmployee.getFirstname());
+        if (updatedEmployee.firstname() != null) {
+            employee.setFirstname(updatedEmployee.firstname());
         }
-        if (updatedEmployee.getMiddlename() != null) {
-            employee.setMiddlename(updatedEmployee.getMiddlename());
+        if (updatedEmployee.middlename() != null) {
+            employee.setMiddlename(updatedEmployee.middlename());
         }
-        if (updatedEmployee.getLastname() != null) {
-            employee.setLastname(updatedEmployee.getLastname());
+        if (updatedEmployee.lastname() != null) {
+            employee.setLastname(updatedEmployee.lastname());
         }
-        if (updatedEmployee.getEmail() != null) {
-            employee.setEmail(updatedEmployee.getEmail());
+        if (updatedEmployee.email() != null) {
+            employee.setEmail(updatedEmployee.email());
         }
-        if (updatedEmployee.getPhone() != null) {
-            employee.setPhone(updatedEmployee.getPhone());
+        if (updatedEmployee.phone() != null) {
+            employee.setPhone(updatedEmployee.phone());
         }
-        if (updatedEmployee.getEmployeeAddress() != null) {
-            employee.setEmployeeAddress(updatedEmployee.getEmployeeAddress());
+        if (updatedEmployee.employeeAddress() != null) {
+            employee.setEmployeeAddress(updatedEmployee.employeeAddress());
         }
-        if (updatedEmployee.getContractType() != null) {
-            employee.setContractType(updatedEmployee.getContractType());
+        if (updatedEmployee.contractType() != null) {
+            employee.setContractType(updatedEmployee.contractType());
         }
-        if (updatedEmployee.getStartDate() != null) {
-            employee.setStartDate(updatedEmployee.getStartDate());
+        if (updatedEmployee.startDate() != null) {
+            employee.setStartDate(updatedEmployee.startDate());
         }
-        if (updatedEmployee.getEndDate() != null) {
-            employee.setEndDate(updatedEmployee.getEndDate());
+        if (updatedEmployee.endDate() != null) {
+            employee.setEndDate(updatedEmployee.endDate());
         }
-        if (updatedEmployee.getEmploymentType() != null) {
-            employee.setEmploymentType(updatedEmployee.getEmploymentType());
+        if (updatedEmployee.employmentType() != null) {
+            employee.setEmploymentType(updatedEmployee.employmentType());
         }
-        if (updatedEmployee.getHourPerWeek() != null) {
-            employee.setHourPerWeek(updatedEmployee.getHourPerWeek());
-        }
-        if (updatedEmployee.getDeleted() != null) {
-            employee.setDeleted(updatedEmployee.getDeleted());
+        if (updatedEmployee.hourPerWeek() != null) {
+            employee.setHourPerWeek(updatedEmployee.hourPerWeek());
         }
 
+        validateDates(employee);
         return employeeRepository.save(employee);
     }
 
@@ -89,5 +100,11 @@ public class EmployeeService {
     private Employee findActiveEmployee(Long id) {
         return employeeRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: " + id));
+    }
+
+    private void validateDates(Employee employee) {
+        if (employee.getEndDate() != null && employee.getEndDate().isBefore(employee.getStartDate())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date must be on or after the start date");
+        }
     }
 }

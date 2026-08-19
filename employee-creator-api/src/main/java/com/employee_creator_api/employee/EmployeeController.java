@@ -1,6 +1,9 @@
 package com.employee_creator_api.employee;
 
 import com.employee_creator_api.employee.entities.Employee;
+import com.employee_creator_api.employee.dto.CreateEmployeeRequest;
+import com.employee_creator_api.employee.dto.UpdateEmployeeRequest;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,12 +40,12 @@ public class EmployeeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee createEmployee(@RequestBody Employee employee) {
+    public Employee createEmployee(@Valid @RequestBody CreateEmployeeRequest employee) {
         return employeeService.createEmployee(employee);
     }
 
     @PatchMapping("/{id}")
-    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee updatedEmployee) {
+    public Employee updateEmployee(@PathVariable Long id, @Valid @RequestBody UpdateEmployeeRequest updatedEmployee) {
         return employeeService.updateEmployee(id, updatedEmployee);
     }
 
