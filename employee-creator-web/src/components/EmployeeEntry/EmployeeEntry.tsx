@@ -1,21 +1,22 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "./EmployeeEntry.module.scss";
 import { deleteEmployee, type Employee } from "../../utils/employee";
 import EditEmployeeDialog from "../EditEmployeeDialog/EditEmployeeDialog";
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
 
-function EmployeeEntry(props: { employee: Employee; onEmployeesChanged: () => void }) {
-  const { employee, onEmployeesChanged } = props;
+function EmployeeEntry(props: { employee: Employee }) {
+  const { employee } = props;
   const editDialogRef = useRef<HTMLDialogElement | null>(null);
   const deleteConfirmRef = useRef<HTMLDialogElement | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteEmployee(employee.id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["employees"] }),
+  });
 
   const handleEdit = () => {
     editDialogRef.current?.showModal();
-  };
-
-  const handleEmployeeSaved = (updatedEmployee: Employee) => {
-    onEmployeesChanged();
   };
 
   const handleDelete = () => {
@@ -23,14 +24,10 @@ function EmployeeEntry(props: { employee: Employee; onEmployeesChanged: () => vo
   };
 
   const handleConfirmDelete = async () => {
-    setIsDeleting(true);
     try {
-      await deleteEmployee(employee.id);
-      onEmployeesChanged();
+      await deleteMutation.mutateAsync();
     } catch (error) {
       console.error("Failed to delete employee:", error);
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -63,16 +60,15 @@ function EmployeeEntry(props: { employee: Employee; onEmployeesChanged: () => vo
           className={styles.employeeActionsButton}
           onClick={handleDelete}
           type="button"
-          disabled={isDeleting}
+          disabled={deleteMutation.isPending}
         >
-          {isDeleting ? "Deleting…" : "Delete"}
+          {deleteMutation.isPending ? "Deleting…" : "Delete"}
         </button>
       </div>
 
       <EditEmployeeDialog
         employee={employee}
         dialogRef={editDialogRef}
-        onSaved={handleEmployeeSaved}
       />
 
       <DeleteConfirmation

@@ -1,10 +1,10 @@
 import {
-  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
   type ReactNode,
 } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "./EmployeeForm.module.scss";
 import {
   createEmployee,
@@ -76,13 +76,22 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
     formFromEmployee(employee),
   );
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOngoing, setIsOngoing] = useState(true);
+  const queryClient = useQueryClient();
+  const saveMutation = useMutation({
+    mutationFn: (employeeInput: EmployeeInput) =>
+      employee
+        ? updateEmployee(employee.id, employeeInput)
+        : createEmployee(employeeInput),
+    onSuccess: (savedEmployee) => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      onSaved?.(savedEmployee);
 
-  useEffect(() => {
-    setForm(formFromEmployee(employee));
-    setError(null);
-  }, [employee]);
+      if (!employee) {
+        setForm(emptyForm());
+      }
+    },
+  });
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -104,8 +113,6 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
       return;
     }
 
-    setIsSubmitting(true);
-
     const employeeInput: EmployeeInput = {
       ...form,
       middlename: form.middlename || null,
@@ -113,23 +120,13 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
     };
 
     try {
-      // Call the appropriate API function based on whether we're editing or creating
-      const savedEmployee = employee
-        ? await updateEmployee(employee.id, employeeInput)
-        : await createEmployee(employeeInput);
-      onSaved?.(savedEmployee);
-
-      if (!employee) {
-        setForm(emptyForm());
-      }
+      await saveMutation.mutateAsync(employeeInput);
     } catch (submissionError) {
       setError(
         submissionError instanceof Error
           ? submissionError.message
           : "Unable to save employee.",
       );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -284,9 +281,9 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
         <button
           className={styles.submitButton}
           type="submit"
-          disabled={isSubmitting}
+          disabled={saveMutation.isPending}
         >
-          {isSubmitting ? submittingLabel : submitLabel}
+          {saveMutation.isPending ? submittingLabel : submitLabel}
         </button>
       </form>
     </div>

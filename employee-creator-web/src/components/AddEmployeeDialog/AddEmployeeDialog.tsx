@@ -4,13 +4,11 @@ import styles from "./AddEmployeeDialog.module.scss";
 
 interface AddEmployeeDialogProps {
   dialogRef: RefObject<HTMLDialogElement | null>;
-  onEmployeeSaved: () => void;
 }
 
-function AddEmployeeDialog({ dialogRef, onEmployeeSaved }: AddEmployeeDialogProps) {
+function AddEmployeeDialog({ dialogRef }: AddEmployeeDialogProps) {
   const handleSaved = () => {
     dialogRef.current?.close();
-    onEmployeeSaved();
   };
 
   return (

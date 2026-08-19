@@ -1,29 +1,26 @@
-import { useEffect, useState } from "react";
-import { type Employee, getEmployees } from "../../utils/employee";
+import { useQuery } from "@tanstack/react-query";
+import { getEmployees } from "../../utils/employee";
 import EmployeeEntry from "../EmployeeEntry/EmployeeEntry";
 import styles from "./EmployeeList.module.scss";
 
-interface EmployeeListProps {
-  updateToken: number;
-  onEmployeesChanged: () => void;
-}
+function EmployeeList() {
+  const { data: employees = [], error, isPending } = useQuery({
+    queryKey: ["employees"],
+    queryFn: () => getEmployees(),
+  });
 
-function EmployeeList({ updateToken, onEmployeesChanged }: EmployeeListProps) {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  useEffect(() => {
-    getEmployees().then((employeeList: Employee[]) => {
-      setEmployees(employeeList);
-    });
-  }, [updateToken]);
+  if (isPending) {
+    return <p>Loading employees…</p>;
+  }
+
+  if (error) {
+    return <p role="alert">Unable to load employees.</p>;
+  }
 
   return (
     <div className={styles.employeeList}>
       {employees.map((employee) => (
-        <EmployeeEntry
-          key={employee.id}
-          employee={employee}
-          onEmployeesChanged={onEmployeesChanged}
-        />
+        <EmployeeEntry key={employee.id} employee={employee} />
       ))}
     </div>
   );
