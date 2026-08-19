@@ -1,4 +1,4 @@
-import apiFetch, { ApiError } from './api'
+import apiFetch from './api'
 
 const fetchMock = jest.fn()
 
