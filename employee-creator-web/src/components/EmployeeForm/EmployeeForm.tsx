@@ -1,9 +1,5 @@
-import {
-  useState,
-  type ChangeEvent,
-  type FormEvent,
-  type ReactNode,
-} from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "./EmployeeForm.module.scss";
 import {
@@ -52,9 +48,7 @@ function emptyForm(): FormValues {
 }
 
 function formFromEmployee(employee?: Employee): FormValues {
-  if (!employee) {
-    return emptyForm();
-  }
+  if (!employee) return emptyForm();
 
   return {
     firstname: employee.firstname,
@@ -72,12 +66,23 @@ function formFromEmployee(employee?: Employee): FormValues {
 }
 
 function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
-  const [form, setForm] = useState<FormValues>(() =>
-    formFromEmployee(employee),
-  );
-  const [error, setError] = useState<string | null>(null);
-  const [isOngoing, setIsOngoing] = useState(true);
   const queryClient = useQueryClient();
+  const [isOngoing, setIsOngoing] = useState(() => !employee?.endDate);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<FormValues>({ defaultValues: formFromEmployee(employee) });
+
+  useEffect(() => {
+    reset(formFromEmployee(employee));
+    setIsOngoing(!employee?.endDate);
+  }, [employee, reset]);
+
   const saveMutation = useMutation({
     mutationFn: (employeeInput: EmployeeInput) =>
       employee
@@ -88,48 +93,49 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
       onSaved?.(savedEmployee);
 
       if (!employee) {
-        setForm(emptyForm());
+        reset(emptyForm());
+        setIsOngoing(true);
       }
     },
   });
 
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = event.target;
-    setForm((currentForm) => ({
-      ...currentForm,
-      [name]: name === "hourPerWeek" ? Number(value) : value,
-    }));
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError(null);
-
-    const validationError = validateForm(form);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
+  const onSubmit = async (form: FormValues) => {
     const employeeInput: EmployeeInput = {
       ...form,
       middlename: form.middlename || null,
-      endDate: form.endDate || null,
+      endDate: isOngoing || !form.endDate ? null : form.endDate,
     };
 
     try {
       await saveMutation.mutateAsync(employeeInput);
     } catch (submissionError) {
-      setError(
-        submissionError instanceof Error
-          ? submissionError.message
-          : "Unable to save employee.",
-      );
+      setError("root", {
+        message:
+          submissionError instanceof Error
+            ? submissionError.message
+            : "Unable to save employee.",
+      });
     }
   };
 
+  const handleOngoingChange = () => {
+    const nextIsOngoing = !isOngoing;
+    setIsOngoing(nextIsOngoing);
+    if (nextIsOngoing) {
+      setValue("endDate", "", { shouldValidate: true });
+    }
+  };
+
+  const validationError =
+    errors.root?.message ??
+    errors.firstname?.message ??
+    errors.lastname?.message ??
+    errors.email?.message ??
+    errors.phone?.message ??
+    errors.employeeAddress?.message ??
+    errors.startDate?.message ??
+    errors.endDate?.message ??
+    errors.hourPerWeek?.message;
   const mode = employee ? "Edit" : "Add";
   const submitLabel = employee ? "Update Employee" : "Create Employee";
   const submittingLabel = employee ? "Updating…" : "Creating…";
@@ -140,41 +146,24 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
         <h2 className={styles.title}>{mode} Employee</h2>
         {headerAction}
       </div>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
         <label htmlFor="firstname">First name</label>
-        <input
-          id="firstname"
-          name="firstname"
-          value={form.firstname}
-          onChange={handleChange}
-          required
-        />
+        <input id="firstname" {...register("firstname", { required: "First name is required." })} />
 
         <label htmlFor="middlename">Middle name (Optional)</label>
-        <input
-          id="middlename"
-          name="middlename"
-          value={form.middlename}
-          onChange={handleChange}
-        />
+        <input id="middlename" {...register("middlename")} />
 
         <label htmlFor="lastname">Last name</label>
-        <input
-          id="lastname"
-          name="lastname"
-          value={form.lastname}
-          onChange={handleChange}
-          required
-        />
+        <input id="lastname" {...register("lastname", { required: "Last name is required." })} />
 
         <label htmlFor="email">Email</label>
         <input
           id="email"
-          name="email"
           type="email"
-          value={form.email}
-          onChange={handleChange}
-          required
+          {...register("email", {
+            required: "Email is required.",
+            pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address." },
+          })}
         />
 
         <div className={styles.phoneField}>
@@ -186,14 +175,15 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
             <span aria-hidden="true">+61</span>
             <input
               id="phone"
-              name="phone"
               inputMode="tel"
               placeholder="0412345678"
-              pattern="0?4[0-9]{8}"
-              title="Enter an Australian mobile number, for example 0412345678"
-              value={form.phone}
-              onChange={handleChange}
-              required
+              {...register("phone", {
+                required: "Mobile number is required.",
+                pattern: {
+                  value: /^0?4\d{8}$/,
+                  message: "Enter a valid Australian mobile number, for example 0412345678.",
+                },
+              })}
             />
           </div>
         </div>
@@ -201,19 +191,11 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
         <label htmlFor="employeeAddress">Address</label>
         <input
           id="employeeAddress"
-          name="employeeAddress"
-          value={form.employeeAddress}
-          onChange={handleChange}
-          required
+          {...register("employeeAddress", { required: "Address is required." })}
         />
 
         <label htmlFor="contractType">Contract type</label>
-        <select
-          id="contractType"
-          name="contractType"
-          value={form.contractType}
-          onChange={handleChange}
-        >
+        <select id="contractType" {...register("contractType")}>
           <option value="PERMANENT">Permanent</option>
           <option value="CONTRACT">Contract</option>
         </select>
@@ -221,20 +203,16 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
         <label htmlFor="startDate">Start date</label>
         <input
           id="startDate"
-          name="startDate"
           type="date"
-          value={form.startDate}
-          onChange={handleChange}
-          required
+          {...register("startDate", { required: "Start date is required." })}
         />
 
         <label htmlFor="isOngoing">Ongoing</label>
         <input
           type="checkbox"
           id="isOngoing"
-          name="isOngoing"
           checked={isOngoing}
-          onChange={() => setIsOngoing(!isOngoing)}
+          onChange={handleOngoingChange}
         />
 
         {!isOngoing && (
@@ -242,21 +220,19 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
             <label htmlFor="endDate">End date</label>
             <input
               id="endDate"
-              name="endDate"
               type="date"
-              value={form.endDate}
-              onChange={handleChange}
+              {...register("endDate", {
+                validate: (value) =>
+                  !value ||
+                  value >= getValues("startDate") ||
+                  "End date must be on or after the start date.",
+              })}
             />
           </>
         )}
 
         <label htmlFor="employmentType">Employment type</label>
-        <select
-          id="employmentType"
-          name="employmentType"
-          value={form.employmentType}
-          onChange={handleChange}
-        >
+        <select id="employmentType" {...register("employmentType")}>
           <option value="FULL_TIME">Full time</option>
           <option value="PART_TIME">Part time</option>
         </select>
@@ -264,18 +240,20 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
         <label htmlFor="hourPerWeek">Hours per week</label>
         <input
           id="hourPerWeek"
-          name="hourPerWeek"
           type="number"
           min="1"
           max="168"
-          value={form.hourPerWeek}
-          onChange={handleChange}
-          required
+          {...register("hourPerWeek", {
+            valueAsNumber: true,
+            required: "Hours per week is required.",
+            min: { value: 1, message: "Hours per week must be between 1 and 168." },
+            max: { value: 168, message: "Hours per week must be between 1 and 168." },
+          })}
         />
 
-        {error && (
+        {validationError && (
           <p className={styles.error} role="alert">
-            {error}
+            {validationError}
           </p>
         )}
         <button
@@ -291,19 +269,3 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
 }
 
 export default EmployeeForm;
-
-function validateForm(form: FormValues): string | null {
-  if (!/^0?4\d{8}$/.test(form.phone)) {
-    return "Enter a valid Australian mobile number, for example 0412345678.";
-  }
-
-  if (form.hourPerWeek < 1 || form.hourPerWeek > 168) {
-    return "Hours per week must be between 1 and 168.";
-  }
-
-  if (form.endDate && form.endDate < form.startDate) {
-    return "End date must be on or after the start date.";
-  }
-
-  return null;
-}
