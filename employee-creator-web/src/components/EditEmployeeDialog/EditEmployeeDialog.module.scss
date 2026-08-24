@@ -24,9 +24,9 @@
 .closeButton {
   min-height: 2.4rem;
   padding: 0.45rem 0.9rem;
-  border: 1px solid #007bff;
+  border: 1px solid var(--primary);
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: var(--primary);
   color: white;
   cursor: pointer;
   font: inherit;
@@ -34,8 +34,8 @@
   box-shadow: 0 2px 4px rgba(0, 86, 179, 0.2);
 
   &:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
   }
 }
 

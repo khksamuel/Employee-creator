@@ -1,5 +1,5 @@
 .employeeForm {
-  background-color: rgb(230, 230, 230);
+  background-color: var(--surface);
   padding: 2rem;
   text-align: left;
 }
@@ -43,7 +43,7 @@
 
 .form input:focus,
 .form select:focus {
-  border-color: #007bff;
+  border-color: var(--primary);
   outline: 2px solid rgba(0, 123, 255, 0.2);
   outline-offset: 1px;
 }
@@ -76,7 +76,7 @@
 }
 
 .phoneInput:focus-within {
-  border-color: #007bff;
+  border-color: var(--primary);
   outline: 2px solid rgba(0, 123, 255, 0.2);
   outline-offset: 1px;
 }
@@ -86,7 +86,7 @@
   align-items: center;
   padding: 0.55rem 0.7rem;
   border-right: 1px solid var(--border);
-  background-color: #dfe3e8;
+  background-color: var(--surface-muted);
   color: var(--text-h);
   font-weight: 600;
 }
@@ -104,13 +104,13 @@
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: var(--primary);
   color: white;
   cursor: pointer;
   font: inherit;
 
   &:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
   }
 
   &:disabled {
@@ -122,7 +122,7 @@
 .error {
   grid-column: 1 / -1;
   margin: 0;
-  color: #b42318;
+  color: var(--error);
   font-weight: 600;
 }
 
