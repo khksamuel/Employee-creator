@@ -22,11 +22,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.server.ResponseStatusException;
 
 @WebMvcTest(EmployeeController.class)
 class EmployeeControllerTest {
@@ -106,10 +104,11 @@ class EmployeeControllerTest {
     @Test
     void getEmployeeByIdReturnsNotFoundWhenEmployeeDoesNotExist() throws Exception {
         when(employeeService.getEmployeeById(99L))
-                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: 99"));
+                .thenThrow(new EmployeeNotFoundException(99L));
 
         mockMvc.perform(get("/api/employees/99"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("Employee not found: 99"));
     }
 
     @Test
@@ -137,22 +136,24 @@ class EmployeeControllerTest {
     @Test
     void updateEmployeeReturnsNotFoundWhenEmployeeDoesNotExist() throws Exception {
         when(employeeService.updateEmployee(eq(99L), any(UpdateEmployeeRequest.class)))
-                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: 99"));
+                .thenThrow(new EmployeeNotFoundException(99L));
 
         mockMvc.perform(patch("/api/employees/99")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"lastname\":\"Lovelace\"}"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("Employee not found: 99"));
     }
 
     @Test
     void deleteEmployeeReturnsNotFoundWhenEmployeeDoesNotExist() throws Exception {
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: 99"))
+        doThrow(new EmployeeNotFoundException(99L))
                 .when(employeeService)
                 .deleteEmployee(99L);
 
         mockMvc.perform(delete("/api/employees/99"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("Employee not found: 99"));
     }
 
     private Employee employee(Long id, String firstname) {

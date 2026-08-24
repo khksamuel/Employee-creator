@@ -1,6 +1,7 @@
 package com.employee_creator_api.employee;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.when;
 import com.employee_creator_api.employee.entities.ContractType;
 import com.employee_creator_api.employee.entities.Employee;
 import com.employee_creator_api.employee.entities.EmploymentType;
+import com.employee_creator_api.employee.dto.UpdateEmployeeRequest;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -43,6 +45,42 @@ class EmployeeServiceTest {
 
         assertDoesNotThrow(() -> employeeService.deleteEmployee(1L));
 
+        verify(employeeRepository, never()).save(employee);
+    }
+
+    @Test
+    void deleteEmployeeThrowsDomainExceptionWhenEmployeeDoesNotExist() {
+        when(employeeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        EmployeeNotFoundException exception = assertThrows(
+                EmployeeNotFoundException.class,
+                () -> employeeService.deleteEmployee(99L));
+
+        org.junit.jupiter.api.Assertions.assertEquals("Employee not found: 99", exception.getMessage());
+    }
+
+    @Test
+    void updateEmployeeThrowsDomainExceptionForAnInvalidDateRange() {
+        Employee employee = employee(false);
+        when(employeeRepository.findByIdAndDeletedFalse(1L)).thenReturn(Optional.of(employee));
+        UpdateEmployeeRequest request = new UpdateEmployeeRequest(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                LocalDate.of(2025, 12, 31),
+                null,
+                null);
+
+        InvalidEmployeeDateException exception = assertThrows(
+                InvalidEmployeeDateException.class,
+                () -> employeeService.updateEmployee(1L, request));
+
+        org.junit.jupiter.api.Assertions.assertEquals("End date must be on or after the start date", exception.getMessage());
         verify(employeeRepository, never()).save(employee);
     }
 

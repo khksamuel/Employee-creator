@@ -4,10 +4,8 @@ import com.employee_creator_api.employee.entities.Employee;
 import com.employee_creator_api.employee.dto.CreateEmployeeRequest;
 import com.employee_creator_api.employee.dto.UpdateEmployeeRequest;
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
@@ -89,7 +87,7 @@ public class EmployeeService {
 
     public void deleteEmployee(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: " + id));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
 
         if (!Boolean.TRUE.equals(employee.getDeleted())) {
             employee.softDelete();
@@ -99,12 +97,12 @@ public class EmployeeService {
 
     private Employee findActiveEmployee(Long id) {
         return employeeRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: " + id));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
     }
 
     private void validateDates(Employee employee) {
         if (employee.getEndDate() != null && employee.getEndDate().isBefore(employee.getStartDate())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date must be on or after the start date");
+            throw new InvalidEmployeeDateException();
         }
     }
 }
