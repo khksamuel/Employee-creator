@@ -3,6 +3,17 @@ set -euo pipefail
 
 project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+if [[ $# -gt 1 || ( $# -eq 1 && "$1" != "demo" ) ]]; then
+  echo "Usage: ./run.sh [demo]" >&2
+  exit 1
+fi
+
+api_run_args=()
+if [[ "${1:-}" == "demo" ]]; then
+  api_run_args=(-Dspring-boot.run.profiles=demo)
+  echo "Demo mode: seeding the database on API startup."
+fi
+
 cleanup() {
   kill "${api_pid:-}" "${web_pid:-}" 2>/dev/null || true
 }
@@ -11,7 +22,7 @@ trap cleanup EXIT INT TERM
 echo "Starting Employee Creator API..."
 (
   cd "$project_root/employee-creator-api"
-  mvn spring-boot:run
+  mvn spring-boot:run "${api_run_args[@]}"
 ) &
 api_pid=$!
 

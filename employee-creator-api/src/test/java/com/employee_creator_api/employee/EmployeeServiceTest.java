@@ -6,11 +6,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.employee_creator_api.employee.entities.ContractType;
 import com.employee_creator_api.employee.entities.Employee;
-import com.employee_creator_api.employee.entities.EmploymentType;
-import com.employee_creator_api.employee.dto.UpdateEmployeeRequest;
-import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,42 +55,13 @@ class EmployeeServiceTest {
         org.junit.jupiter.api.Assertions.assertEquals("Employee not found: 99", exception.getMessage());
     }
 
-    @Test
-    void updateEmployeeThrowsDomainExceptionForAnInvalidDateRange() {
-        Employee employee = employee(false);
-        when(employeeRepository.findByIdAndDeletedFalse(1L)).thenReturn(Optional.of(employee));
-        UpdateEmployeeRequest request = new UpdateEmployeeRequest(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                LocalDate.of(2025, 12, 31),
-                null,
-                null);
-
-        InvalidEmployeeDateException exception = assertThrows(
-                InvalidEmployeeDateException.class,
-                () -> employeeService.updateEmployee(1L, request));
-
-        org.junit.jupiter.api.Assertions.assertEquals("End date must be on or after the start date", exception.getMessage());
-        verify(employeeRepository, never()).save(employee);
-    }
-
     private Employee employee(boolean deleted) {
         Employee employee = new Employee(
                 "Ada",
                 "Lovelace",
                 "ada@example.com",
                 "0400000000",
-                "1 Example Street",
-                ContractType.PERMANENT,
-                LocalDate.of(2026, 1, 1),
-                EmploymentType.FULL_TIME,
-                38);
+                "1 Example Street");
         employee.setId(1L);
         employee.setDeleted(deleted);
         return employee;

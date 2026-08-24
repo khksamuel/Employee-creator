@@ -6,12 +6,19 @@ CREATE TABLE IF NOT EXISTS employee_creator.employee (
     middlename VARCHAR(255),
     lastname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(20) NOT NULL UNIQUE, -- assuming australian phone number format no country code
+    phone VARCHAR(20) NOT NULL UNIQUE,
     employee_address VARCHAR(255) NOT NULL,
+    deleted TINYINT(1) NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS employee_creator.contract (
+    contract_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT UNSIGNED NOT NULL,
     contract_type ENUM('permanent', 'contract') NOT NULL,
     start_date DATE NOT NULL,
-    end_date DATE, -- null if ongoing
+    end_date DATE,
     employment_type ENUM('full-time', 'part-time') NOT NULL,
     hour_per_week INT UNSIGNED NOT NULL,
-    deleted TINYINT(1) NULL DEFAULT 0; -- for soft deletion
+    CONSTRAINT fk_contract_employee
+        FOREIGN KEY (employee_id) REFERENCES employee_creator.employee(employee_id)
 );

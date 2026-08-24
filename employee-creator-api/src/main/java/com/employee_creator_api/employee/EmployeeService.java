@@ -19,7 +19,7 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public List<Employee> getAllEmployees(boolean includeDeleted) {
-        return includeDeleted ? employeeRepository.findAll() : employeeRepository.findAllActiveEmployees();
+        return includeDeleted ? employeeRepository.findAll() : employeeRepository.findByDeletedFalse();
     }
 
     @Transactional(readOnly = true)
@@ -35,11 +35,6 @@ public class EmployeeService {
         employee.setEmail(request.email());
         employee.setPhone(request.phone());
         employee.setEmployeeAddress(request.employeeAddress());
-        employee.setContractType(request.contractType());
-        employee.setStartDate(request.startDate());
-        employee.setEndDate(request.endDate());
-        employee.setEmploymentType(request.employmentType());
-        employee.setHourPerWeek(request.hourPerWeek());
         employee.setDeleted(false);
         return employeeRepository.save(employee);
     }
@@ -65,23 +60,6 @@ public class EmployeeService {
         if (updatedEmployee.employeeAddress() != null) {
             employee.setEmployeeAddress(updatedEmployee.employeeAddress());
         }
-        if (updatedEmployee.contractType() != null) {
-            employee.setContractType(updatedEmployee.contractType());
-        }
-        if (updatedEmployee.startDate() != null) {
-            employee.setStartDate(updatedEmployee.startDate());
-        }
-        if (updatedEmployee.endDate() != null) {
-            employee.setEndDate(updatedEmployee.endDate());
-        }
-        if (updatedEmployee.employmentType() != null) {
-            employee.setEmploymentType(updatedEmployee.employmentType());
-        }
-        if (updatedEmployee.hourPerWeek() != null) {
-            employee.setHourPerWeek(updatedEmployee.hourPerWeek());
-        }
-
-        validateDates(employee);
         return employeeRepository.save(employee);
     }
 
@@ -98,11 +76,5 @@ public class EmployeeService {
     private Employee findActiveEmployee(Long id) {
         return employeeRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
-    }
-
-    private void validateDates(Employee employee) {
-        if (employee.getEndDate() != null && employee.getEndDate().isBefore(employee.getStartDate())) {
-            throw new InvalidEmployeeDateException();
-        }
     }
 }

@@ -14,10 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.employee_creator_api.employee.dto.CreateEmployeeRequest;
 import com.employee_creator_api.employee.dto.UpdateEmployeeRequest;
-import com.employee_creator_api.employee.entities.ContractType;
 import com.employee_creator_api.employee.entities.Employee;
-import com.employee_creator_api.employee.entities.EmploymentType;
-import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,7 +126,7 @@ class EmployeeControllerTest {
     void createEmployeeRejectsInvalidEmployeeData() throws Exception {
         mockMvc.perform(post("/api/employees")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(employeeJson("Lin").replace("\"hourPerWeek\": 38", "\"hourPerWeek\": 0")))
+                        .content(employeeJson("Lin").replace("\"firstname\": \"Lin\"", "\"firstname\": \"\"")))
                 .andExpect(status().isBadRequest());
     }
 
@@ -162,11 +159,7 @@ class EmployeeControllerTest {
                 "Hopper",
                 firstname.toLowerCase() + "@example.com",
                 "0400000000",
-                "1 Example Street",
-                ContractType.PERMANENT,
-                LocalDate.of(2026, 1, 1),
-                EmploymentType.FULL_TIME,
-                38);
+                "1 Example Street");
         employee.setId(id);
         return employee;
     }
@@ -178,11 +171,7 @@ class EmployeeControllerTest {
                   "lastname": "Hopper",
                   "email": "%s@example.com",
                   "phone": "0400000000",
-                  "employeeAddress": "1 Example Street",
-                  "contractType": "PERMANENT",
-                  "startDate": "2026-01-01",
-                  "employmentType": "FULL_TIME",
-                  "hourPerWeek": 38
+                  "employeeAddress": "1 Example Street"
                 }
                 """.formatted(firstname, firstname.toLowerCase());
     }

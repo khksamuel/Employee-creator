@@ -2,12 +2,14 @@ package com.employee_creator_api.employee.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Convert;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "employee")
@@ -35,41 +37,22 @@ public class Employee {
     @Column(name = "employee_address", nullable = false, length = 255)
     private String employeeAddress;
 
-    @Column(name = "contract_type", nullable = false)
-    @Convert(converter = ContractTypeConverter.class)
-    private ContractType contractType;
-
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-    @Column(name = "end_date")
-    private LocalDate endDate;
-
-    @Column(name = "employment_type", nullable = false)
-    @Convert(converter = EmploymentTypeConverter.class)
-    private EmploymentType employmentType;
-
-    @Column(name = "hour_per_week", nullable = false)
-    private Integer hourPerWeek;
-
     @Column(name = "deleted", nullable = true)
     private Boolean deleted = false;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private List<Contract> contracts = new ArrayList<>();
 
     // Constructors
     public Employee() {}
 
-    public Employee(String firstname, String lastname, String email, String phone, 
-                    String employeeAddress, ContractType contractType, LocalDate startDate,
-                    EmploymentType employmentType, Integer hourPerWeek) {
+    public Employee(String firstname, String lastname, String email, String phone, String employeeAddress) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.phone = phone;
         this.employeeAddress = employeeAddress;
-        this.contractType = contractType;
-        this.startDate = startDate;
-        this.employmentType = employmentType;
-        this.hourPerWeek = hourPerWeek;
         this.deleted = false;
     }
 
@@ -128,46 +111,6 @@ public class Employee {
 
     public void setEmployeeAddress(String employeeAddress) {
         this.employeeAddress = employeeAddress;
-    }
-
-    public ContractType getContractType() {
-        return contractType;
-    }
-
-    public void setContractType(ContractType contractType) {
-        this.contractType = contractType;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public EmploymentType getEmploymentType() {
-        return employmentType;
-    }
-
-    public void setEmploymentType(EmploymentType employmentType) {
-        this.employmentType = employmentType;
-    }
-
-    public Integer getHourPerWeek() {
-        return hourPerWeek;
-    }
-
-    public void setHourPerWeek(Integer hourPerWeek) {
-        this.hourPerWeek = hourPerWeek;
     }
 
     public Boolean getDeleted() {

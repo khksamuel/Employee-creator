@@ -14,6 +14,11 @@ public class EmployeeExceptionHandler {
         return problem(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
+    @ExceptionHandler(ContractNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleContractNotFound(ContractNotFoundException exception) {
+        return problem(HttpStatus.NOT_FOUND, exception.getMessage());
+    }
+
     @ExceptionHandler(InvalidEmployeeDateException.class)
     public ResponseEntity<ProblemDetail> handleInvalidEmployeeDate(InvalidEmployeeDateException exception) {
         return problem(HttpStatus.BAD_REQUEST, exception.getMessage());
