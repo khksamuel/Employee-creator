@@ -4,7 +4,7 @@ setlocal
 set "project_root=%~dp0"
 
 echo Starting Employee Creator API...
-start "Employee Creator API" /D "%project_root%employee-creator-api" cmd /k gradlew.bat bootRun
+start "Employee Creator API" /D "%project_root%employee-creator-api" cmd /k mvn spring-boot:run
 
 echo Starting Employee Creator web app...
 start "Employee Creator Web" /D "%project_root%employee-creator-web" cmd /k npm run dev

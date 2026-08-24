@@ -11,7 +11,7 @@ trap cleanup EXIT INT TERM
 echo "Starting Employee Creator API..."
 (
   cd "$project_root/employee-creator-api"
-  ./gradlew bootRun
+  mvn spring-boot:run
 ) &
 api_pid=$!
 

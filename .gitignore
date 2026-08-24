@@ -1,8 +1,8 @@
-# Java / Gradle (employee-creator-api)
+# Java / Maven (employee-creator-api)
 employee-creator-api/HELP.md
-employee-creator-api/.gradle/
 employee-creator-api/build/
-!employee-creator-api/gradle/wrapper/gradle-wrapper.jar
+employee-creator-api/target/
+employee-creator-api/.mvn/timing.properties
 !employee-creator-api/**/src/main/**/build/
 !employee-creator-api/**/src/test/**/build/
 
@@ -32,7 +32,7 @@ employee-creator-api/nbproject/private/
 employee-creator-api/nbbuild/
 employee-creator-api/dist/
 employee-creator-api/nbdist/
-employee-creator-api/.nb-gradle/
+employee-creator-api/.nb-maven/
 
 # Node / Vite (employee-creator-web)
 employee-creator-web/logs/
@@ -47,6 +47,9 @@ employee-creator-web/node_modules/
 employee-creator-web/dist/
 employee-creator-web/dist-ssr/
 employee-creator-web/*.local
+employee-creator-web/coverage/
+employee-creator-web/.vite/
+employee-creator-web/.eslintcache
 
 # Environment variables
 .env

@@ -6,7 +6,7 @@ project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "Running backend tests..."
 (
   cd "$project_root/employee-creator-api"
-  ./gradlew test
+  mvn test
 )
 
 echo

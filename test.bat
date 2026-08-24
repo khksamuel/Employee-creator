@@ -3,7 +3,7 @@ setlocal
 
 echo Running backend tests...
 pushd employee-creator-api
-call gradlew.bat test
+call mvn test
 set "test_result=%ERRORLEVEL%"
 popd
 if not "%test_result%"=="0" goto :failure
