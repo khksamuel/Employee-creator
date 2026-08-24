@@ -1,5 +1,6 @@
 .hero {
-  background-color: var(--surface);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   padding: 2rem;
   // padding-left: 4rem;
   text-align: left;
