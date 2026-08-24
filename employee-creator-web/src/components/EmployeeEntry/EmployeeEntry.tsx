@@ -37,15 +37,8 @@ function EmployeeEntry(props: { employee: Employee }) {
         <p>
           {employee.firstname} {employee.middlename} {employee.lastname}
         </p>
-        <p>
-          {employee.contractType} -{" "}
-          {Math.floor(
-            (new Date().getTime() - new Date(employee.startDate).getTime()) /
-              (1000 * 3600 * 24 * 365),
-          )}{" "}
-          years
-        </p>
         <p>{employee.email}</p>
+        <p>{employee.phone}</p>
       </div>
 
       <div className={styles.employeeActions}>

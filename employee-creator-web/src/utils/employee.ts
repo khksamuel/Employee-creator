@@ -1,8 +1,5 @@
 import apiFetch from "./api";
 
-export type ContractType = "PERMANENT" | "CONTRACT";
-export type EmploymentType = "FULL_TIME" | "PART_TIME";
-
 export interface Employee {
   id: number;
   firstname: string;
@@ -11,11 +8,6 @@ export interface Employee {
   email: string;
   phone: string;
   employeeAddress: string;
-  contractType: ContractType;
-  startDate: string;
-  endDate?: string | null;
-  employmentType: EmploymentType;
-  hourPerWeek: number;
   deleted: boolean;
 }
 

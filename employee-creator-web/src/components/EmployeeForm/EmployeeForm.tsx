@@ -1,14 +1,12 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "./EmployeeForm.module.scss";
 import {
   createEmployee,
   updateEmployee,
-  type ContractType,
   type Employee,
   type EmployeeInput,
-  type EmploymentType,
 } from "../../utils/employee";
 
 interface EmployeeFormProps {
@@ -24,11 +22,6 @@ interface FormValues {
   email: string;
   phone: string;
   employeeAddress: string;
-  contractType: ContractType;
-  startDate: string;
-  endDate: string;
-  employmentType: EmploymentType;
-  hourPerWeek: number;
 }
 
 function emptyForm(): FormValues {
@@ -39,11 +32,6 @@ function emptyForm(): FormValues {
     email: "",
     phone: "",
     employeeAddress: "",
-    contractType: "PERMANENT",
-    startDate: "",
-    endDate: "",
-    employmentType: "FULL_TIME",
-    hourPerWeek: 38,
   };
 }
 
@@ -57,30 +45,21 @@ function formFromEmployee(employee?: Employee): FormValues {
     email: employee.email,
     phone: employee.phone,
     employeeAddress: employee.employeeAddress,
-    contractType: employee.contractType,
-    startDate: employee.startDate,
-    endDate: employee.endDate ?? "",
-    employmentType: employee.employmentType,
-    hourPerWeek: employee.hourPerWeek,
   };
 }
 
 function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
   const queryClient = useQueryClient();
-  const [isOngoing, setIsOngoing] = useState(() => !employee?.endDate);
   const {
     register,
     handleSubmit,
     reset,
     setError,
-    setValue,
-    getValues,
     formState: { errors },
   } = useForm<FormValues>({ defaultValues: formFromEmployee(employee) });
 
   useEffect(() => {
     reset(formFromEmployee(employee));
-    setIsOngoing(!employee?.endDate);
   }, [employee, reset]);
 
   const saveMutation = useMutation({
@@ -92,10 +71,7 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       onSaved?.(savedEmployee);
 
-      if (!employee) {
-        reset(emptyForm());
-        setIsOngoing(true);
-      }
+      if (!employee) reset(emptyForm());
     },
   });
 
@@ -103,7 +79,6 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
     const employeeInput: EmployeeInput = {
       ...form,
       middlename: form.middlename || null,
-      endDate: isOngoing || !form.endDate ? null : form.endDate,
     };
 
     try {
@@ -118,24 +93,13 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
     }
   };
 
-  const handleOngoingChange = () => {
-    const nextIsOngoing = !isOngoing;
-    setIsOngoing(nextIsOngoing);
-    if (nextIsOngoing) {
-      setValue("endDate", "", { shouldValidate: true });
-    }
-  };
-
   const validationError =
     errors.root?.message ??
     errors.firstname?.message ??
     errors.lastname?.message ??
     errors.email?.message ??
     errors.phone?.message ??
-    errors.employeeAddress?.message ??
-    errors.startDate?.message ??
-    errors.endDate?.message ??
-    errors.hourPerWeek?.message;
+    errors.employeeAddress?.message;
   const mode = employee ? "Edit" : "Add";
   const submitLabel = employee ? "Update Employee" : "Create Employee";
   const submittingLabel = employee ? "Updating…" : "Creating…";
@@ -192,63 +156,6 @@ function EmployeeForm({ employee, onSaved, headerAction }: EmployeeFormProps) {
         <input
           id="employeeAddress"
           {...register("employeeAddress", { required: "Address is required." })}
-        />
-
-        <label htmlFor="contractType">Contract type</label>
-        <select id="contractType" {...register("contractType")}>
-          <option value="PERMANENT">Permanent</option>
-          <option value="CONTRACT">Contract</option>
-        </select>
-
-        <label htmlFor="startDate">Start date</label>
-        <input
-          id="startDate"
-          type="date"
-          {...register("startDate", { required: "Start date is required." })}
-        />
-
-        <label htmlFor="isOngoing">Ongoing</label>
-        <input
-          type="checkbox"
-          id="isOngoing"
-          checked={isOngoing}
-          onChange={handleOngoingChange}
-        />
-
-        {!isOngoing && (
-          <>
-            <label htmlFor="endDate">End date</label>
-            <input
-              id="endDate"
-              type="date"
-              {...register("endDate", {
-                validate: (value) =>
-                  !value ||
-                  value >= getValues("startDate") ||
-                  "End date must be on or after the start date.",
-              })}
-            />
-          </>
-        )}
-
-        <label htmlFor="employmentType">Employment type</label>
-        <select id="employmentType" {...register("employmentType")}>
-          <option value="FULL_TIME">Full time</option>
-          <option value="PART_TIME">Part time</option>
-        </select>
-
-        <label htmlFor="hourPerWeek">Hours per week</label>
-        <input
-          id="hourPerWeek"
-          type="number"
-          min="1"
-          max="168"
-          {...register("hourPerWeek", {
-            valueAsNumber: true,
-            required: "Hours per week is required.",
-            min: { value: 1, message: "Hours per week must be between 1 and 168." },
-            max: { value: 168, message: "Hours per week must be between 1 and 168." },
-          })}
         />
 
         {validationError && (
