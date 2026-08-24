@@ -21,7 +21,9 @@ public class ContractService {
 
     @Transactional(readOnly = true)
     public List<Contract> getAllContracts(Long employeeId) {
-        return employeeId == null ? contractRepository.findAll() : contractRepository.findByEmployeeId(employeeId);
+        employeeRepository.findByIdAndDeletedFalse(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+        return contractRepository.findByEmployee_Id(employeeId);
     }
 
     @Transactional(readOnly = true)

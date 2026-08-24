@@ -26,7 +26,7 @@ public class ContractController {
     public ContractController(ContractService contractService) { this.contractService = contractService; }
 
     @GetMapping
-    public List<Contract> getAllContracts(@RequestParam(required = false) Long employeeId) {
+    public List<Contract> getAllContracts(@RequestParam Long employeeId) {
         return contractService.getAllContracts(employeeId);
     }
 

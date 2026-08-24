@@ -2,11 +2,16 @@ import { useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "./EmployeeEntry.module.scss";
 import { deleteEmployee, type Employee } from "../../utils/employee";
+import type { Contract } from "../../utils/contract";
 import EditEmployeeDialog from "../EditEmployeeDialog/EditEmployeeDialog";
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
 
-function EmployeeEntry(props: { employee: Employee }) {
-  const { employee } = props;
+interface EmployeeEntryProps {
+  employee: Employee;
+  contracts: Contract[];
+}
+
+function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
   const editDialogRef = useRef<HTMLDialogElement | null>(null);
   const deleteConfirmRef = useRef<HTMLDialogElement | null>(null);
   const queryClient = useQueryClient();
@@ -31,14 +36,28 @@ function EmployeeEntry(props: { employee: Employee }) {
     }
   };
 
+  const initialContract = contracts.reduce<Contract | undefined>(
+    (earliestContract, contract) =>
+      !earliestContract || contract.startDate < earliestContract.startDate
+        ? contract
+        : earliestContract,
+    undefined,
+  );
+
   return (
     <div className={styles.employeeEntry}>
       <div className={styles.employeeInfo}>
         <p>
           {employee.firstname} {employee.middlename} {employee.lastname}
         </p>
+        {initialContract ? (
+          <p>
+            {initialContract.contractType} - {yearsSince(initialContract.startDate)} years
+          </p>
+        ) : (
+          <p>No contracts</p>
+        )}
         <p>{employee.email}</p>
-        <p>{employee.phone}</p>
       </div>
 
       <div className={styles.employeeActions}>
@@ -74,3 +93,15 @@ function EmployeeEntry(props: { employee: Employee }) {
 }
 
 export default EmployeeEntry;
+
+function yearsSince(startDate: string): number {
+  const start = new Date(`${startDate}T00:00:00`);
+  const today = new Date();
+  let years = today.getFullYear() - start.getFullYear();
+  const anniversaryHasPassed =
+    today.getMonth() > start.getMonth() ||
+    (today.getMonth() === start.getMonth() && today.getDate() >= start.getDate());
+
+  if (!anniversaryHasPassed) years -= 1;
+  return Math.max(years, 0);
+}

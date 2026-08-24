@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
 
-    List<Contract> findByEmployeeId(Long employeeId);
+    List<Contract> findByEmployee_Id(Long employeeId);
 }
