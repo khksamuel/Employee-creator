@@ -1,5 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import styles from "./EmployeeEntry.module.scss";
 import { deleteEmployee, type Employee } from "../../utils/employee";
 import type { Contract } from "../../utils/contract";
@@ -14,6 +16,7 @@ interface EmployeeEntryProps {
 function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
   const editDialogRef = useRef<HTMLDialogElement | null>(null);
   const deleteConfirmRef = useRef<HTMLDialogElement | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: () => deleteEmployee(employee.id),
@@ -46,37 +49,78 @@ function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
 
   return (
     <div className={styles.employeeEntry}>
-      <div className={styles.employeeInfo}>
-        <p>
-          {employee.firstname} {employee.middlename} {employee.lastname}
-        </p>
-        {initialContract ? (
+      <div className={styles.employeeSummary}>
+        <div className={styles.employeeInfo}>
           <p>
-            {initialContract.contractType} - {yearsSince(initialContract.startDate)} years
+            {employee.firstname} {employee.middlename} {employee.lastname}
           </p>
-        ) : (
-          <p>No contracts</p>
-        )}
-        <p>{employee.email}</p>
+          {initialContract ? (
+            <p>
+              {initialContract.contractType} - {yearsSince(initialContract.startDate)} years
+            </p>
+          ) : (
+            <p>No contracts</p>
+          )}
+          <p>{employee.email}</p>
+        </div>
+
+        <div className={styles.employeeActions}>
+          <button
+            className={styles.employeeActionsButton}
+            onClick={handleEdit}
+            type="button"
+          >
+            Edit
+          </button>
+          <button
+            className={styles.employeeActionsButton}
+            onClick={handleDelete}
+            type="button"
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? "Deleting…" : "Delete"}
+          </button>
+          <button
+            className={styles.expandButton}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+            type="button"
+            aria-expanded={isExpanded}
+            aria-controls={`employee-${employee.id}-contracts`}
+            aria-label={isExpanded ? "Hide contract details" : "Show contract details"}
+          >
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              className={isExpanded ? styles.expandIconOpen : undefined}
+            />
+          </button>
+        </div>
       </div>
 
-      <div className={styles.employeeActions}>
-        <button
-          className={styles.employeeActionsButton}
-          onClick={handleEdit}
-          type="button"
+      {isExpanded && (
+        <section
+          className={styles.contractDetails}
+          id={`employee-${employee.id}-contracts`}
+          aria-label={`${employee.firstname} ${employee.lastname}'s contracts`}
         >
-          Edit
-        </button>
-        <button
-          className={styles.employeeActionsButton}
-          onClick={handleDelete}
-          type="button"
-          disabled={deleteMutation.isPending}
-        >
-          {deleteMutation.isPending ? "Deleting…" : "Delete"}
-        </button>
-      </div>
+          <h3>Contracts</h3>
+          {contracts.length === 0 ? (
+            <p>No contracts recorded.</p>
+          ) : (
+            <ul>
+              {contracts.map((contract) => (
+                <li key={contract.id}>
+                  <span>{contract.contractType}</span>
+                  <span>{contract.employmentType.replace("_", " ")}</span>
+                  <span>{contract.hourPerWeek} hours/week</span>
+                  <span>
+                    {contract.startDate} – {contract.endDate ?? "Ongoing"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
 
       <EditEmployeeDialog
         employee={employee}
