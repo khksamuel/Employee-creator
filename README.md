@@ -51,11 +51,13 @@ cd employee-creator-web
 npm install
 ```
 
-Start both applications with demo data:
+Start both applications with demo data from the repository root:
 
 ```sh
+# only tested Linux
 ./run.sh demo
 ```
+
 
 ```bat
 run.bat demo
@@ -66,8 +68,15 @@ Demo mode creates the `employee` and `contract` tables if needed, then loads the
 To start without applying the setup or seed scripts, omit `demo`:
 
 ```sh
+# only tested Linux
 ./run.sh
 ```
+
+```bat
+run.bat
+```
+
+The `.sh` scripts have been tested on Linux only. They may work on macOS, but macOS compatibility has not been verified. Use the `.bat` scripts on Windows.
 
 The API is available at `http://localhost:8080`; Vite normally starts at `http://localhost:5173`. The frontend proxies `/api` requests to the API. Swagger UI is available at `http://localhost:8080/swagger-ui.html`.
 
@@ -96,7 +105,6 @@ The scripts are in `employee-creator-api/`.
 
 | Method | Path | Description |
 | --- | --- | --- |
-| `GET` | `/api/contracts` | List contracts |
 | `GET` | `/api/contracts?employeeId={id}` | List contracts for an employee |
 | `GET` | `/api/contracts/{id}` | Get a contract |
 | `POST` | `/api/contracts` | Create a contract for an active employee |
@@ -122,6 +130,7 @@ Contract responses include `employeeId` rather than embedding an employee object
 Run both test suites from the repository root:
 
 ```sh
+# only tested Linux
 ./test.sh
 ```
 
@@ -138,4 +147,4 @@ cd employee-creator-web && npm test
 
 ## Frontend scope
 
-The current frontend provides employee management. Contract CRUD is available in the backend API only; no contract user interface has been added.
+The current frontend provides employee management. Contract CRUD is available in the backend API only; no contract CRUD interface has been added.
