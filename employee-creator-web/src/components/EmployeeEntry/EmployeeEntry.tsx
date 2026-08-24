@@ -119,6 +119,8 @@ function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
               ))}
             </ul>
           )}
+
+          {/* Add contract CRUD controls here */}
         </section>
       )}
 
