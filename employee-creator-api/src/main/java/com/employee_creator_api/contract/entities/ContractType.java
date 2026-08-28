@@ -1,4 +1,4 @@
-package com.employee_creator_api.employee.entities;
+package com.employee_creator_api.contract.entities;
 
 public enum ContractType {
     PERMANENT("permanent"),

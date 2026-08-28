@@ -1,8 +1,9 @@
-package com.employee_creator_api.employee;
+package com.employee_creator_api.contract;
 
-import com.employee_creator_api.employee.entities.Contract;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.employee_creator_api.contract.entities.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
 

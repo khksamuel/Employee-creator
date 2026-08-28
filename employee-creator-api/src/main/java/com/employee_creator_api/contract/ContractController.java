@@ -1,8 +1,9 @@
-package com.employee_creator_api.employee;
+package com.employee_creator_api.contract;
 
-import com.employee_creator_api.employee.dto.CreateContractRequest;
-import com.employee_creator_api.employee.dto.UpdateContractRequest;
-import com.employee_creator_api.employee.entities.Contract;
+import com.employee_creator_api.contract.dto.CreateContractRequest;
+import com.employee_creator_api.contract.dto.UpdateContractRequest;
+import com.employee_creator_api.contract.entities.Contract;
+
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;

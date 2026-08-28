@@ -1,6 +1,6 @@
-package com.employee_creator_api.employee.dto;
+package com.employee_creator_api.contract.dto;
 
-import com.employee_creator_api.employee.entities.ContractType;
+import com.employee_creator_api.contract.entities.ContractType;
 import com.employee_creator_api.employee.entities.EmploymentType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;

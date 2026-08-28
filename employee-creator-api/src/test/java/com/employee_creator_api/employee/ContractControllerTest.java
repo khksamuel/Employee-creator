@@ -12,10 +12,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.employee_creator_api.employee.dto.CreateContractRequest;
-import com.employee_creator_api.employee.dto.UpdateContractRequest;
-import com.employee_creator_api.employee.entities.Contract;
-import com.employee_creator_api.employee.entities.ContractType;
+import com.employee_creator_api.contract.ContractController;
+import com.employee_creator_api.contract.ContractNotFoundException;
+import com.employee_creator_api.contract.ContractService;
+import com.employee_creator_api.contract.dto.CreateContractRequest;
+import com.employee_creator_api.contract.dto.UpdateContractRequest;
+import com.employee_creator_api.contract.entities.Contract;
+import com.employee_creator_api.contract.entities.ContractType;
 import com.employee_creator_api.employee.entities.Employee;
 import com.employee_creator_api.employee.entities.EmploymentType;
 import java.time.LocalDate;

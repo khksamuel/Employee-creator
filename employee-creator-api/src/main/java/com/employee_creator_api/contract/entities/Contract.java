@@ -1,5 +1,8 @@
-package com.employee_creator_api.employee.entities;
+package com.employee_creator_api.contract.entities;
 
+import com.employee_creator_api.employee.entities.Employee;
+import com.employee_creator_api.employee.entities.EmploymentType;
+import com.employee_creator_api.employee.entities.EmploymentTypeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;

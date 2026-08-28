@@ -1,4 +1,4 @@
-package com.employee_creator_api.employee;
+package com.employee_creator_api.contract;
 
 public class ContractNotFoundException extends RuntimeException {
 

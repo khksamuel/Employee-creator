@@ -1,4 +1,4 @@
-package com.employee_creator_api.employee.entities;
+package com.employee_creator_api.contract.entities;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
