@@ -3,7 +3,7 @@
   margin: auto;
   padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: 2px;
   background: transparent;
   box-shadow: var(--shadow);
 
@@ -18,7 +18,7 @@
   padding: 2rem;
   background: var(--surface-raised);
   color: var(--text);
-  border-radius: 8px;
+  border-radius: 2px;
 
   h2 {
     margin-top: 0;
@@ -42,13 +42,13 @@
   min-height: 2.4rem;
   padding: 0.45rem 1.2rem;
   border: 1px solid var(--secondary);
-  border-radius: 4px;
+  border-radius: 2px;
   background-color: var(--secondary);
   color: white;
   cursor: pointer;
   font: inherit;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2);
+  box-shadow: none;
 
   &:hover {
     background-color: var(--secondary-hover);
@@ -60,13 +60,13 @@
   min-height: 2.4rem;
   padding: 0.45rem 1.2rem;
   border: 1px solid var(--danger);
-  border-radius: 4px;
+  border-radius: 2px;
   background-color: var(--danger);
   color: white;
   cursor: pointer;
   font: inherit;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+  box-shadow: none;
 
   &:hover {
     background-color: var(--danger-hover);
