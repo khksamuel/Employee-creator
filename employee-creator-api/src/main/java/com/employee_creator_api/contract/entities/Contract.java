@@ -2,12 +2,12 @@ package com.employee_creator_api.contract.entities;
 
 import com.employee_creator_api.employee.entities.Employee;
 import com.employee_creator_api.employee.entities.EmploymentType;
-import com.employee_creator_api.employee.entities.EmploymentTypeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,7 +32,7 @@ public class Contract {
     private Employee employee;
 
     @Column(name = "contract_type", nullable = false)
-    @Convert(converter = ContractTypeConverter.class)
+    @Enumerated(EnumType.STRING)
     private ContractType contractType;
 
     @Column(name = "start_date", nullable = false)
@@ -42,7 +42,7 @@ public class Contract {
     private LocalDate endDate;
 
     @Column(name = "employment_type", nullable = false)
-    @Convert(converter = EmploymentTypeConverter.class)
+    @Enumerated(EnumType.STRING)
     private EmploymentType employmentType;
 
     @Column(name = "hour_per_week", nullable = false)

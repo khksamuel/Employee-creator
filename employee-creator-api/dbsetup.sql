@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS employee_creator.employee (
 CREATE TABLE IF NOT EXISTS employee_creator.contract (
     contract_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     employee_id BIGINT UNSIGNED NOT NULL,
-    contract_type ENUM('permanent', 'contract') NOT NULL,
+    contract_type ENUM('PERMANENT', 'CONTRACT') NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE,
-    employment_type ENUM('full-time', 'part-time') NOT NULL,
+    employment_type ENUM('FULL_TIME', 'PART_TIME') NOT NULL,
     hour_per_week INT UNSIGNED NOT NULL,
     CONSTRAINT fk_contract_employee
         FOREIGN KEY (employee_id) REFERENCES employee_creator.employee(employee_id)

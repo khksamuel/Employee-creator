@@ -84,63 +84,63 @@ INSERT IGNORE INTO
 VALUES (
         1,
         1,
-        'permanent',
+        'PERMANENT',
         '2022-01-15',
         NULL,
-        'full-time',
+        'FULL_TIME',
         40
     ),
     (
         2,
         2,
-        'permanent',
+        'PERMANENT',
         '2021-06-20',
         NULL,
-        'full-time',
+        'FULL_TIME',
         40
     ),
     (
         3,
         3,
-        'contract',
+        'CONTRACT',
         '2023-09-01',
         '2024-12-31',
-        'part-time',
+        'PART_TIME',
         25
     ),
     (
         4,
         4,
-        'permanent',
+        'PERMANENT',
         '2020-03-10',
         NULL,
-        'full-time',
+        'FULL_TIME',
         40
     ),
     (
         5,
         5,
-        'contract',
+        'CONTRACT',
         '2023-11-15',
         NULL,
-        'part-time',
+        'PART_TIME',
         20
     ),
     (
         6,
         6,
-        'permanent',
+        'PERMANENT',
         '2022-07-05',
         NULL,
-        'full-time',
+        'FULL_TIME',
         40
     ),
     (
         7,
         3,
-        'contract',
+        'CONTRACT',
         '2023-09-01',
         NULL,
-        'full-time',
+        'FULL_TIME',
         40
     );
