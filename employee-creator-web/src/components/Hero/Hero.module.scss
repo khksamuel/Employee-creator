@@ -1,13 +1,18 @@
 .hero {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 2rem;
-  // padding-left: 4rem;
+  background: var(--surface-raised);
   text-align: left;
 }
 
-.heroTitle {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+.appBar { display: flex; align-items: center; gap: .65rem; min-height: 2.75rem; padding: 0 1.5rem; background: #0f6cbd; color: white; font-size: .875rem; }
+.mark { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; background: white; color: #0f6cbd; font-weight: 700; }
+.productName { font-weight: 600; }
+.status { margin-left: auto; opacity: .86; font-size: .78rem; }
+.titleRow { padding: 1.55rem 1.75rem 1.4rem; border-bottom: 1px solid var(--border); }
+.heroTitle { font-weight: 600; }
+.titleRow p { margin-top: .35rem; color: var(--text); }
+@media (max-width: 640px) {
+  .appBar { min-height: 2.5rem; padding-inline: 1rem; }
+  .status { font-size: .72rem; }
+  .titleRow { padding: 1.2rem 1rem; }
+  .titleRow p { max-width: 30ch; }
 }
