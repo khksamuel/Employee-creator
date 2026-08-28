@@ -1,43 +1,63 @@
 .employeeEntry {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  width: 85%;
+  padding: 0 1.75rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .employeeSummary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1.45fr 1fr 1.45fr auto;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.employeeInfo {
+  display: contents;
+}
+.employeeName {
+  font-weight: 600;
+  color: var(--text-h);
+}
+.employeeMeta,
+.employeeEmail {
+  color: var(--text);
 }
 
 .employeeActions {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  align-items: center;
 }
 
 .employeeActionsButton {
-  padding: 0.5rem 1rem;
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 4px;
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid transparent;
+  border-radius: 2px;
   cursor: pointer;
+  font-weight: 600;
   &:hover {
-    background-color: var(--primary-hover);
+    background-color: #f0f6fc;
+    border-color: #c7e0f4;
   }
 }
 
 .expandButton {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.55rem;
+  gap: 0.35rem;
   color: var(--primary);
-  background: transparent;
-  border: 1px solid var(--primary);
-  border-radius: 4px;
+  background: #f0f6fc;
+  border: 1px solid #c7e0f4;
+  border-radius: 2px;
   cursor: pointer;
 }
 
@@ -47,9 +67,10 @@
 
 .contractDetails {
   width: 100%;
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
+  margin: 0 0 1.25rem;
+  padding: 1rem;
   border-top: 1px solid var(--border);
+  background: var(--surface-muted);
 
   h3 {
     margin: 0 0 0.75rem;
@@ -68,19 +89,34 @@
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
     padding: 0.75rem;
-    background: var(--surface-muted);
-    border-radius: 4px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 2px;
   }
 }
 
 @media (max-width: 640px) {
+  .employeeEntry {
+    padding-inline: 1rem;
+  }
   .employeeSummary {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.8rem;
+    padding: 1.15rem 0;
   }
 
   .employeeActions {
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.25rem;
+    padding-top: 0.2rem;
+  }
+
+  .employeeActionsButton,
+  .expandButton {
+    min-height: 2.5rem;
+    padding-inline: 0.75rem;
   }
 }
