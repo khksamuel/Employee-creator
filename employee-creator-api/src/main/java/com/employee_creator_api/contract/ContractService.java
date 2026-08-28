@@ -49,11 +49,16 @@ public class ContractService {
 
     public Contract updateContract(Long id, UpdateContractRequest request) {
         Contract contract = findContract(id);
-        if (request.contractType() != null) contract.setContractType(request.contractType());
-        if (request.startDate() != null) contract.setStartDate(request.startDate());
-        if (request.endDate() != null) contract.setEndDate(request.endDate());
-        if (request.employmentType() != null) contract.setEmploymentType(request.employmentType());
-        if (request.hourPerWeek() != null) contract.setHourPerWeek(request.hourPerWeek());
+        if (request.contractType() != null)
+            contract.setContractType(request.contractType());
+        if (request.startDate() != null)
+            contract.setStartDate(request.startDate());
+        if (request.endDate() != null)
+            contract.setEndDate(request.endDate());
+        if (request.employmentType() != null)
+            contract.setEmploymentType(request.employmentType());
+        if (request.hourPerWeek() != null)
+            contract.setHourPerWeek(request.hourPerWeek());
         validateDates(contract);
         return contractRepository.save(contract);
     }
