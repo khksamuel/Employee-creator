@@ -6,14 +6,18 @@ function AddEmployee() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   return (
     <div className={styles.addEmployee}>
-      <p className={styles.addEmployeeText}>
-        Please click on 'Edit' to find more details of each employee
-      </p>
+      <div>
+        <h2>Employee directory</h2>
+        <p className={styles.addEmployeeText}>
+          Select an employee to review or update their details.
+        </p>
+      </div>
       <button
         className={styles.addEmployeeButton}
+        type="button"
         onClick={() => dialogRef.current?.showModal()}
       >
-        Add Employee
+        <span aria-hidden="true">+</span> Add employee
       </button>
       <AddEmployeeDialog dialogRef={dialogRef} />
     </div>
