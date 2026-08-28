@@ -1,0 +1,98 @@
+.contractForm {
+  background-color: var(--surface);
+  padding: 1.75rem;
+  text-align: left;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.headingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.contractForm form {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 0.9rem 1.5rem;
+  max-width: 48rem;
+}
+
+.contractForm label {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.contractForm input,
+.contractForm select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--surface-raised);
+  color: var(--text-h);
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+}
+
+.contractForm input:focus,
+.contractForm select:focus {
+  border-color: var(--primary);
+  outline: 2px solid rgba(15, 108, 189, 0.2);
+  outline-offset: 1px;
+}
+
+.error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--error);
+  font-weight: 600;
+}
+
+.contractForm button {
+  grid-column: 2;
+  justify-self: start;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 2px;
+  background-color: var(--primary);
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+}
+
+@media (max-width: 640px) {
+  .contractForm {
+    padding: 1.5rem;
+  }
+
+  .contractForm form {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .contractForm input,
+  .contractForm select {
+    margin-bottom: 0.75rem;
+  }
+
+  .contractForm button {
+    grid-column: 1;
+  }
+}

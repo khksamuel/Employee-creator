@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import styles from "./EmployeeEntry.module.scss";
 import { deleteEmployee, type Employee } from "../../utils/employee";
-import type { Contract } from "../../utils/contract";
+import { deleteContract, type Contract } from "../../utils/contract";
 import EditEmployeeDialog from "../EditEmployeeDialog/EditEmployeeDialog";
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
+import ContractDialog from "../ContractDialog/ContractDialog";
 
 interface EmployeeEntryProps {
   employee: Employee;
@@ -16,11 +17,20 @@ interface EmployeeEntryProps {
 function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
   const editDialogRef = useRef<HTMLDialogElement | null>(null);
   const deleteConfirmRef = useRef<HTMLDialogElement | null>(null);
+  const addContractDialogRef = useRef<HTMLDialogElement | null>(null);
+  const editContractDialogRef = useRef<HTMLDialogElement | null>(null);
+  const deleteContractConfirmRef = useRef<HTMLDialogElement | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<Contract>();
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: () => deleteEmployee(employee.id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["employees"] }),
+  });
+  const deleteContractMutation = useMutation({
+    mutationFn: (contractId: number) => deleteContract(contractId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["contracts", employee.id] }),
   });
 
   const handleEdit = () => {
@@ -36,6 +46,25 @@ function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
       await deleteMutation.mutateAsync();
     } catch (error) {
       console.error("Failed to delete employee:", error);
+    }
+  };
+
+  const handleEditContract = (contract: Contract) => {
+    setSelectedContract(contract);
+    editContractDialogRef.current?.showModal();
+  };
+
+  const handleDeleteContract = (contract: Contract) => {
+    setSelectedContract(contract);
+    deleteContractConfirmRef.current?.showModal();
+  };
+
+  const handleConfirmDeleteContract = async () => {
+    if (!selectedContract) return;
+    try {
+      await deleteContractMutation.mutateAsync(selectedContract.id);
+    } catch (error) {
+      console.error("Failed to delete contract:", error);
     }
   };
 
@@ -108,34 +137,71 @@ function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
           id={`employee-${employee.id}-contracts`}
           aria-label={`${employee.firstname} ${employee.lastname}'s contracts`}
         >
-          <h3>Contracts</h3>
+          <div className={styles.contractHeading}>
+            <h3>Contracts</h3>
+            <button
+              className={styles.contractActionButton}
+              type="button"
+              onClick={() => addContractDialogRef.current?.showModal()}
+            >
+              Add contract
+            </button>
+          </div>
           {contracts.length === 0 ? (
             <p>No contracts recorded.</p>
           ) : (
             <ul>
               {contracts.map((contract) => (
                 <li key={contract.id}>
-                  <span>{contract.contractType}</span>
-                  <span>{contract.employmentType.replace("_", " ")}</span>
-                  <span>{contract.hourPerWeek} hours/week</span>
+                  <span>{formatContractType(contract.contractType)} </span>
+                  <span>{formatEmploymentType(contract.employmentType)} </span>
+                  <span>{contract.hourPerWeek} hours/week </span>
                   <span>
                     {contract.startDate} - {contract.endDate ?? "Ongoing"}
                   </span>
+                  <div className={styles.contractActions}>
+                    <button
+                      className={styles.contractActionButton}
+                      type="button"
+                      onClick={() => handleEditContract(contract)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className={styles.contractActionButton}
+                      type="button"
+                      onClick={() => handleDeleteContract(contract)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
           )}
-
-          {/* Add contract CRUD controls here */}
         </section>
       )}
 
+      <ContractDialog
+        employeeId={employee.id}
+        dialogRef={addContractDialogRef}
+      />
+      <ContractDialog
+        employeeId={employee.id}
+        contract={selectedContract}
+        dialogRef={editContractDialogRef}
+      />
       <EditEmployeeDialog employee={employee} dialogRef={editDialogRef} />
 
       <DeleteConfirmation
         message={`Are you sure you want to delete ${employee.firstname} ${employee.lastname}?`}
         dialogRef={deleteConfirmRef}
         onConfirm={handleConfirmDelete}
+      />
+      <DeleteConfirmation
+        message="Are you sure you want to delete this contract?"
+        dialogRef={deleteContractConfirmRef}
+        onConfirm={handleConfirmDeleteContract}
       />
     </div>
   );
@@ -154,4 +220,17 @@ function yearsSince(startDate: string): number {
 
   if (!anniversaryHasPassed) years -= 1;
   return Math.max(years, 0);
+}
+
+function formatContractType(contractType: Contract["contractType"]): string {
+  return contractType.charAt(0) + contractType.slice(1).toLowerCase();
+}
+
+function formatEmploymentType(
+  employmentType: Contract["employmentType"],
+): string {
+  return employmentType
+    .split("_")
+    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+    .join(" ");
 }
