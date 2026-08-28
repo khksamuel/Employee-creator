@@ -4,9 +4,7 @@ function Hero() {
   return (
     <header className={styles.hero}>
       <div className={styles.appBar}>
-        <span className={styles.mark} aria-hidden="true">E</span>
         <span className={styles.productName}>Employee Creator</span>
-        <span className={styles.status}>Saved</span>
       </div>
       <div className={styles.titleRow}>
         <div>
