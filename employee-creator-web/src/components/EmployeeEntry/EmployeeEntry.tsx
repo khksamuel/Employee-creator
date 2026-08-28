@@ -119,7 +119,7 @@ function EmployeeEntry({ employee, contracts }: EmployeeEntryProps) {
                   <span>{contract.employmentType.replace("_", " ")}</span>
                   <span>{contract.hourPerWeek} hours/week</span>
                   <span>
-                    {contract.startDate} – {contract.endDate ?? "Ongoing"}
+                    {contract.startDate} - {contract.endDate ?? "Ongoing"}
                   </span>
                 </li>
               ))}

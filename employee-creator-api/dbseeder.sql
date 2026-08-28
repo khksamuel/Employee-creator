@@ -38,7 +38,7 @@ VALUES (
         'emily.williams@company.com',
         '0423456789',
         '789 Elm Street, Brisbane QLD 4000',
-        1
+        0
     ),
     (
         4,
@@ -131,6 +131,15 @@ VALUES (
         6,
         'permanent',
         '2022-07-05',
+        NULL,
+        'full-time',
+        40
+    ),
+    (
+        7,
+        3,
+        'contract',
+        '2023-09-01',
         NULL,
         'full-time',
         40
