@@ -1,20 +1,8 @@
 .employeeList {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
+  width: 100%;
 }
-
-.employeeList > :not(:last-child) {
-  position: relative;
-
-  &::after {
-    position: absolute;
-    right: 5%;
-    bottom: -0.15rem;
-    left: 5%;
-    height: 1px;
-    background-color: var(--border);
-    content: '';
-  }
-}
+.listHeader { display: grid; grid-template-columns: 1.45fr 1fr 1.45fr auto; gap: 1rem; padding: .65rem 1.75rem; color: #605e5c; background: var(--surface-muted); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.status, .empty { padding: 2rem 1.75rem; color: var(--text); }
+@media (max-width: 760px) { .listHeader { display: none; } }

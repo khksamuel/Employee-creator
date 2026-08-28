@@ -20,15 +20,19 @@ function EmployeeList() {
   const contractsError = contractQueries.some((query) => query.isError);
 
   if (employeesPending || contractsPending) {
-    return <p>Loading employees…</p>;
+    return <p className={styles.status}>Loading employees…</p>;
   }
 
   if (employeesError || contractsError) {
-    return <p role="alert">Unable to load employees and contracts.</p>;
+    return <p className={styles.status} role="alert">Unable to load employees and contracts.</p>;
   }
 
   return (
     <div className={styles.employeeList}>
+      <div className={styles.listHeader} aria-hidden="true">
+        <span>Employee</span><span>Employment</span><span>Contact</span><span>Actions</span>
+      </div>
+      {employees.length === 0 && <p className={styles.empty}>No employee records yet. Add an employee to begin.</p>}
       {employees.map((employee, index) => (
         <EmployeeEntry
           key={employee.id}
