@@ -63,7 +63,7 @@ Start both applications with demo data from the repository root:
 run.bat demo
 ```
 
-Demo mode creates the `employee` and `contract` tables if needed, then loads the sample data. It is safe to run repeatedly because the seed script uses idempotent inserts.
+Flyway creates and upgrades the `employee` and `contract` tables on API startup. Demo mode then loads the sample data; it is safe to run repeatedly because the seed script uses idempotent inserts.
 
 To start without applying the setup or seed scripts, omit `demo`:
 
@@ -80,13 +80,25 @@ The `.sh` scripts have been tested on Linux only. They may work on macOS, but ma
 
 The API is available at `http://localhost:8080`; Vite normally starts at `http://localhost:5173`. The frontend proxies `/api` requests to the API. Swagger UI is available at `http://localhost:8080/swagger-ui.html`.
 
-## Database scripts
+## Database migrations
 
-The scripts are in `employee-creator-api/`.
+Schema changes are managed by Flyway and live in `employee-creator-api/src/main/resources/db/migration/`.
 
-- `dbsetup.sql` creates the current two-table schema.
-- `dbseeder.sql` inserts the demo employees and contracts.
-- `dbmigration.sql` is a one-time migration from the former single-table schema. Back up the database first, run it only against the old schema, and do not run it after the new `contract` table has been created.
+- `V1__create_legacy_employee_schema.sql` records the original single-table schema.
+- `V2__extract_employee_contracts.sql` creates `contract`, migrates the employment fields, and removes them from `employee`.
+
+On an empty `employee_creator` database, starting the API applies both migrations automatically. Flyway records them in `flyway_schema_history`; do not edit an applied migration. Add a new versioned file for each later schema change.
+
+If you already have the *current* two-table schema created by the former scripts, back it up and run the API once with these environment variables:
+
+```sh
+SPRING_FLYWAY_BASELINE_ON_MIGRATE=true
+SPRING_FLYWAY_BASELINE_VERSION=2
+```
+
+Flyway will create its history table and record the existing schema at V2; remove the variables after that first successful run. A legacy database with the original single employee table should use baseline version `1` instead, allowing Flyway to run V2.
+
+Demo data is no longer a schema migration. It is at `src/main/resources/db/demo/demo-data.sql` and runs only with the `demo` profile.
 
 ## API
 
