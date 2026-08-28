@@ -48,20 +48,64 @@ public class Contract {
     @Column(name = "hour_per_week", nullable = false)
     private Integer hourPerWeek;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Employee getEmployee() { return employee; }
-    public void setEmployee(Employee employee) { this.employee = employee; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
     @JsonProperty("employeeId")
-    public Long getEmployeeId() { return employee == null ? null : employee.getId(); }
-    public ContractType getContractType() { return contractType; }
-    public void setContractType(ContractType contractType) { this.contractType = contractType; }
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
-    public EmploymentType getEmploymentType() { return employmentType; }
-    public void setEmploymentType(EmploymentType employmentType) { this.employmentType = employmentType; }
-    public Integer getHourPerWeek() { return hourPerWeek; }
-    public void setHourPerWeek(Integer hourPerWeek) { this.hourPerWeek = hourPerWeek; }
+    public Long getEmployeeId() {
+        return employee == null ? null : employee.getId();
+    }
+
+    public ContractType getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(ContractType contractType) {
+        this.contractType = contractType;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public EmploymentType getEmploymentType() {
+        return employmentType;
+    }
+
+    public void setEmploymentType(EmploymentType employmentType) {
+        this.employmentType = employmentType;
+    }
+
+    public Integer getHourPerWeek() {
+        return hourPerWeek;
+    }
+
+    public void setHourPerWeek(Integer hourPerWeek) {
+        this.hourPerWeek = hourPerWeek;
+    }
 }

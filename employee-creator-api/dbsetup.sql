@@ -19,6 +19,5 @@ CREATE TABLE IF NOT EXISTS employee_creator.contract (
     end_date DATE,
     employment_type ENUM('FULL_TIME', 'PART_TIME') NOT NULL,
     hour_per_week INT UNSIGNED NOT NULL,
-    CONSTRAINT fk_contract_employee
-        FOREIGN KEY (employee_id) REFERENCES employee_creator.employee(employee_id)
+    CONSTRAINT fk_contract_employee FOREIGN KEY (employee_id) REFERENCES employee_creator.employee (employee_id)
 );
